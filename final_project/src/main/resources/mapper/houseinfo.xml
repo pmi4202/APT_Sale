@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper
+	namespace="com.ssafy.final_project.model.mapper.HouseInfoMapper">
+
+	<!-- 집 정보 리스트 불러올 때 사용 -->
+	<select id="selectHouseByDong" parameterType="string"
+		resultType="HouseInfoDto">
+		select
+		aptCode,aptName,dongCode,dongName,buildYear,jibun,lat,lng,img
+		from
+		houseInfo where dongCode like concat(#{dongCode},"%");
+	</select>
+
+	<select id="selectHouseByDongWithLike" parameterType="map"
+		resultType="HouseInfoDto">
+		select
+		info.aptCode,aptName,dongCode,dongName,buildYear,jibun,lat,lng,img,
+		if(hl.userid= #{userId},true,false) as liked
+		from houseInfo info
+		left outer
+		join
+		houseinfolike hl
+		on hl.aptCode = info.aptCode
+		where dongCode like
+		concat(#{dongCode},"%")
+		order by aptCode
+		;
+	</select>
+	<!-- aptCode를 이용해 집 하나의 정보 -->
+	<select id="selectHouseByAptCode" parameterType="int"
+		resultType="HouseInfoDto">
+		select
+		aptCode,aptName,dongCode,dongName,buildYear,jibun,lat,lng,img
+		from houseInfo where aptCode = #{aptCode}
+	</select>
+
+	<!-- 하우스 인포데이터 추가 maybe 공공 api에서 얻어온 데이터를 가종하고 여기에 보내질 것이다. <insert> </insert> -->
+
+	<select id="selectMaxAptCode" resultType="int">
+		select max(aptCode)
+		from houseInfo
+	</select>
+</mapper>

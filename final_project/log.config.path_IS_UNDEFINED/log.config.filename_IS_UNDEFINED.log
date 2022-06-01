@@ -1,0 +1,18 @@
+INFO  22-05-19 14:22:24[restartedMain] [FinalProjectApplication:55] - Starting FinalProjectApplication using Java 1.8.0_192 on DESKTOP-QL1NA81 with PID 30176 (C:\Users\start\Desktop\ssafyProjcet\termfinal\final_project\target\classes started by start in C:\Users\start\Desktop\ssafyProjcet\termfinal\final_project)
+INFO  22-05-19 14:22:24[restartedMain] [FinalProjectApplication:640] - No active profile set, falling back to 1 default profile: "default"
+INFO  22-05-19 14:22:24[restartedMain] [TomcatWebServer:108] - Tomcat initialized with port(s): 80 (http)
+INFO  22-05-19 14:22:24[restartedMain] [StandardService:173] - Starting service [Tomcat]
+INFO  22-05-19 14:22:24[restartedMain] [StandardEngine:173] - Starting Servlet engine: [Apache Tomcat/9.0.62]
+INFO  22-05-19 14:22:24[restartedMain] [[/]:173] - Initializing Spring embedded WebApplicationContext
+INFO  22-05-19 14:22:24[restartedMain] [ServletWebServerApplicationContext:290] - Root WebApplicationContext: initialization completed in 432 ms
+INFO  22-05-19 14:22:24[restartedMain] [OptionalLiveReloadServer:58] - LiveReload server is running on port 35729
+INFO  22-05-19 14:22:24[restartedMain] [TomcatWebServer:220] - Tomcat started on port(s): 80 (http) with context path ''
+INFO  22-05-19 14:22:24[restartedMain] [FinalProjectApplication:61] - Started FinalProjectApplication in 0.901 seconds (JVM running for 452.528)
+INFO  22-05-19 14:22:24[restartedMain] [ConditionEvaluationDeltaLoggingListener:63] - Condition evaluation unchanged
+INFO  22-05-19 14:22:30[http-nio-80-exec-1] [[/]:173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+INFO  22-05-19 14:22:30[http-nio-80-exec-1] [DispatcherServlet:525] - Initializing Servlet 'dispatcherServlet'
+INFO  22-05-19 14:22:30[http-nio-80-exec-1] [DispatcherServlet:547] - Completed initialization in 1 ms
+INFO  22-05-19 14:22:30[http-nio-80-exec-1] [HikariDataSource:110] - HikariPool-2 - Starting...
+INFO  22-05-19 14:22:30[http-nio-80-exec-1] [HikariDataSource:123] - HikariPool-2 - Start completed.
+INFO  22-05-19 14:23:58[Thread-13] [HikariDataSource:350] - HikariPool-2 - Shutdown initiated...
+INFO  22-05-19 14:23:58[Thread-13] [HikariDataSource:352] - HikariPool-2 - Shutdown completed.

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ssafy.final_project.model.mapper.HouseLikeMapper">
+
+	<select id="getHouseLike" parameterType="int" resultType="int">
+		select
+		count(*) from houseinfolike where aptCode = #{aptCode}
+	</select>
+
+	<select id="userLikeStateAboutHouse"
+		parameterType="HouseLikeDto" resultType="int">
+		select count(*) from
+		houseinfolike where aptCode =
+		#{aptCode} and userid =#{userId}
+	</select>
+
+	<insert id="setHouseLike" parameterType="map">
+		insert into
+		houseinfolike(aptCode,userid) values(#{aptcode},#{userid})
+	</insert>
+
+	<delete id="unSetHouseLike" parameterType="map">
+		delete from
+		houseinfolike where aptCode=#{aptcode} and userId =#{userid}
+	</delete>
+
+	<select id="selectAllDataExceptME"
+		resultType="HouseLikeWithRowNumDto" parameterType="string">
+		select aptCode,
+		userId,row_number() over(partition by userId ) as rowNum from
+		houseinfolike
+		where userId != #{userid}
+		order by userId,rowNum;
+
+	</select>
+
+	<select id="selectUserCount" resultType="int">
+		select count(*) from
+		user
+	</select>
+
+	<select id="selectHouseLikeByUserId"
+		resultType="HouseLikeWithRowNumDto" parameterType="string">
+		select
+		no,aptCode,userId,row_number() over(partition by userId ) as rowNum
+		from houseinfolike where userid=#{userid}
+	</select>
+
+	<select id="selectAllByUserIdWhenLike" resultType="HouseLikeDto">
+		select no,
+		hl.aptCode, userid, likeTime, aptName, dongCode, dongName,
+		buildYear, jibun, lat, lng, img from houseinfolike hl
+		join houseinfo h
+		on hl.aptCode = h.aptCode
+		where hl.userid = #{userId};
+	</select>
+</mapper>

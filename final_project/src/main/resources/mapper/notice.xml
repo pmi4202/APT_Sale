@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ssafy.final_project.model.mapper.NoticeMapper">
+
+
+	<!-- 조건(타이틀)에 맞는 공지사항 전체 개수 -->
+	<select id="selectCount" parameterType="ListParameterDto"
+		resultType="int">
+		select count(*) from notice
+		join user
+		using(userid)
+		<where>
+			<if test="keyWord == 'no'">
+				no = #{searcWord}
+			</if>
+			<if test="keyWord == 'title'">
+				title like
+				concat('%',#{searchWord},'%')
+			</if>
+			<if test="keyWord == 'username'">
+				username like
+				concat('%',#{searchWord},'%')
+			</if>
+		</where>
+	</select>
+
+	<!-- 조건에 맞는 공지사항 전체 리스트 -->
+	<select id="selectAllNotice" parameterType="ListParameterDto"
+		resultType="NoticeUserDto">
+
+		select no,title,text,createDate,userId,userName from
+		notice
+		join user
+		using(userid)
+		<trim prefix="where">
+			<if test="keyWord == 'no'">
+				no = #{searcWord}
+			</if>
+			<if test="keyWord == 'title'">
+				title like
+				concat('%',#{searchWord},'%')
+			</if>
+			<if test="keyWord == 'username'">
+				user.username like
+				concat('%',#{searchWord},'%')
+			</if>
+		</trim>
+		order by no desc
+		Limit #{startRecordNum},#{itemPerPage}
+	</select>
+
+	<!-- 공지사항 인설트 -->
+	<insert id="insertNotice" parameterType="NoticeUserDto">
+		insert into
+		notice(title,text,userid)
+		values(#{title},#{text},#{userId})
+	</insert>
+
+	<update id="updateNotice" parameterType="NoticeUserDto">
+		update notice set
+		title=#{title},text=#{text},createDate=now() where no = #{no} and
+		userid = #{userId}
+	</update>
+
+	<delete id="deleteNoticeByNo" parameterType="map">
+		delete from notice
+		where no = #{no} and userid=#{userid}
+	</delete>
+
+	<!-- 글 번호로 특정 공지 가져오기 -->
+	<select id="selectNoteByNo" parameterType="int"
+		resultType="NoticeUserDto">
+		select no,title,text,createDate,userId,userName from
+		notice
+		join user
+		using( userId)
+		where no = #{no}
+	</select>
+</mapper>

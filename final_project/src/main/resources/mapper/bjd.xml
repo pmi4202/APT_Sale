@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.final_project.model.mapper.BJDApiMapper">
+
+	<select id="selectSidoInfo" resultType="SidoDto">
+		select sidoCode,sidoName
+		from sidocode order by sidoCode
+	</select>
+
+<!-- 원래라면 gugunCode, gungunName 이 맞는데, sido 와 gugun 클래스 타입이 일치하여
+이름 규칙을 어기고 sido쪽으로 공유  -->
+	<select id="selectGuGunInfo" parameterType="string"
+		resultType="SidoDto">
+		SELECT gugunCode as sidoCode,gugunName as sidoName 
+		FROM guguncode
+		where gugunCode like concat(#{sidoCode},"%")
+	</select>
+
+	<select id="selectDongInfo" parameterType="string" resultType="DongDto">
+		select dongCode,sidoName,gugunName,dongName from dongcode
+		where dongCode like concat(#{gugunCode},"%")
+	</select>
+</mapper>

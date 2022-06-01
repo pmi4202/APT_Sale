@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.final_project.model.mapper.CommentMapper">
+	<!-- board에 해당하는 댓글을 비동기로 가져온다. -->
+
+	<!-- no는 코멘트의 주키, 참조키(user_userid,board_no)만 할 경우 한 게시글에 댓글 하나 밖에 못씀 -->
+
+	<resultMap type="CommentDto" id="CommentDtoResultMap">
+		<result column="user_userid" property="userId" />
+		<result column="username" property="userName" />
+		<result column="text" property="text" />
+		<result column="no" property="no" />
+		<result column="board_no" property="boardNo"/>
+		<result column="editdate" property="editDate"/>
+	</resultMap>
+
+	<select id="selectComment" parameterType="int"
+		resultMap="CommentDtoResultMap">
+		select user_userid,username, text, no,board_no,editdate
+		from
+		comment
+		left outer join user
+		on comment.user_userid = user.userid
+		where
+		board_no = #{no}
+		order by editdate desc
+	</select>
+
+	<!-- 댓글을 생성한다. -->
+	<insert id="createComment" parameterType="CommentDto">
+		insert into
+		comment(user_userid,board_no,text)
+		value(#{userId},#{boardNo},#{text});
+	</insert>
+
+	<update id="updateComment" parameterType="CommentDto" >
+		update comment set text
+		=?
+		where user_userid=#{userId}and no=#{no}
+	</update>
+
+	<delete id="deleteComment" parameterType="CommentDto" >
+		delete from comment where no = #{no} and user_userid = #{userId}
+	</delete>
+</mapper>

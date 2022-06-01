@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.final_project.model.mapper.BoardMapper">
+	<!-- 게시글 페이징 적용해 가져오기 -->
+	<select id="selectBoard" parameterType="ListParameterDto"
+		resultType="BoardDto">
+		select no, if(b.deleted=1,"....삭제된 글입니다.",title) as title,
+		if( length(text) > 50,concat(substr(text,1,60),"...(생략)"),text) as
+		text,
+		createDate,
+		 b.userid
+		,u.username,b.deleted
+		from
+		board b
+		left outer join user u
+		on b.userid = u.userid
+		<where> <!-- 안에 구문이 있으면 자동으로 where 붙여줌 -->
+			u.deleted = 0 <!-- 탈퇴 안된 사용자 보드만 -->
+			<if test="keyWord == 'no'">
+				and no = #{searchWord}
+			</if>
+			<if test="keyWord =='title'">
+				and title like concat('%',#{searchWord},'%')
+			</if>
+			<if test="keyWord == 'username'">
+				and u.username like concat('%',#{searchWord},'%')
+			</if>
+		</where>
+		order by createDate desc
+		Limit #{startRecordNum},#{itemPerPage}
+	</select>
+
+
+	<!-- 게시글 추가 -->
+	<insert id="insertBoard" parameterType="BoardDto">
+		insert into
+		board(title,
+		text, createDate, userid)
+		values(#{title},#{text},now(),#{userId});
+		<selectKey keyProperty="no" keyColumn="no" order="AFTER"
+			resultType="int">
+			select Max(no) from board
+		</selectKey>
+	</insert>
+
+	<insert id="insertFile" parameterType="BoardDto">
+		insert into file(article_no, original_file_name, save_file_name,
+		save_folder)
+		values
+		<foreach collection="filelist" item="file" separator=" , ">
+			(#{no},#{file.originalFileName},#{file.saveFileName},#{file.saveFolder})
+		</foreach>
+	</insert>
+
+
+	<!-- 게시글 삭제 -->
+	<delete id="deleteBoard" parameterType="map">
+		update board set deleted = 1
+		where
+		no = #{boardno} and userid = #{userid}
+
+		<!-- delete from board where no = #{boardno} and userid = #{userid} -->
+
+	</delete>
+
+	<resultMap type="FileDto" id="FileDtoMap">
+		<result property="no" column="article_no" />
+		<result property="originalFileName" column="original_file_name" />
+		<result property="saveFileName" column="save_file_name" />
+		<result property="saveFolder" column="save_folder" />
+	</resultMap>
+
+	<select id="privateFileSelectByNo" parameterType="int"
+		resultMap="FileDtoMap">
+		select article_no, original_file_name, save_file_name,
+		save_folder from
+		file where article_no = #{no}
+	</select>
+
+	<resultMap type="BoardDto" id="BoardDtoSpecific">
+		<result property="no" column="no" />
+		<result property="title" column="title" />
+		<result property="text" column="text" />
+		<result property="createDate" column="createDate" />
+		<result property="userId" column="userid" />
+		<collection property="filelist" column="no" javaType="list"
+			ofType="FileDto" select="privateFileSelectByNo">
+		</collection>
+	</resultMap>
+	<!-- 게시글 상세보기, no(게시글 아이디)를 통해 게시글을 가져옴 -->
+	<select id="selectOne" parameterType="int"
+		resultMap="BoardDtoSpecific">
+		select no,
+		title, text, createDate,
+		board.userid,userName
+		from board
+		left outer join user
+		using(userid)
+		where no = #{no};
+	</select>
+
+	<!-- 게시글 수정 -->
+	<update id="updateBoard" parameterType="BoardDto">
+		update board set
+		title=#{title},text=#{text},createDate=now()
+		where no = #{no} and
+		userid = #{userId}
+	</update>
+
+
+	<!-- 게시글 전체수 페이징 네비게이션 구성시에 필요함 -->
+	<select id="getBoardCount" parameterType="ListParameterDto"
+		resultType="int">
+		select count(*) from board b
+		left outer join user u
+		on b.userid =
+		u.userid
+		<where> <!-- 안에 구문이 있으면 자동으로 where 붙여줌 -->
+			<if test="keyWord == 'no'">
+				 no = #{searchWord}
+			</if>
+			<if test="keyWord =='title'">
+				title like concat('%',#{searchWord},'%')
+			</if>
+			<if test="keyWord == 'username'">
+				u.username like concat('%',#{searchWord},'%')
+			</if>
+			<trim prefix="and">
+			u.deleted = 0
+		</trim>
+		</where>
+		
+	</select>
+
+
+</mapper>

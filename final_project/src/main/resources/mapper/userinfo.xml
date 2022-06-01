@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.final_project.model.mapper.UserInfoMapper">
+	
+	<!-- 2022년 4월 29일 부로 usertable에 deleted가 추가됨, 실제로 삭제안하고 삭제됬다는 표시를 남김 -->
+	
+	<sql id="userFiled">
+	userid, userPassword, userName, userAddress, phoneNumber, registerDate, grade,deleted,deletedDate
+	</sql>
+	
+	<select id="select" resultType="UserInfoDto">
+		SELECT  <include refid="userFiled"></include> FROM user
+	</select>
+	
+	<select id="login" parameterType="map" resultType="UserInfoDto">
+	select <include refid="userFiled"></include>
+	from user
+	where userid = #{userId} and userPassword = #{userPassword}
+	</select>
+	
+	<insert id="regist" parameterType="UserInfoDto">
+	insert into user (userid, userPassword, userName, userAddress, phoneNumber, registerDate, grade)
+	values (#{userId}, #{userPassword}, #{userName}, #{userAddress}, #{phoneNumber}, now(), 1)
+	</insert>
+	
+	<update id="updateToDeleteState" parameterType="String">
+		update user set deleted = 1,deletedDate=now() 
+		where userid = #{userid}
+		
+		<!-- 
+		delete from user
+		where userid = #{userId}	
+		 -->
+	</update>
+	
+	<update id="update" parameterType="UserInfoDto">
+		update user
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userName != null">userName = #{userName},</if>
+			<if test="userAddress != null">userAddress = #{userAddress},</if>
+			<if test="phoneNumber != null">phoneNumber = #{phoneNumber},</if>
+		</trim>
+		where userid = #{userId}
+	</update>
+	
+	<update id="updateDeletedByUserId" parameterType="string">
+		update user set deleted=0 where userid=#{userid}
+	</update>
+	
+	<!-- 이거 안쓰는 거인 듯? -->
+	<select id="read" parameterType="String" resultType="UserInfoDto">
+	select userid, userPassword, userName, userAddress, phoneNumber, registerDate, grade,deleted
+	from user
+	where userid = #{userId}
+	</select>
+	
+	<select id="findPassword" parameterType="UserInfoDto" resultType="UserInfoDto">
+	select userid, userPassword, userName, userAddress, phoneNumber, registerDate, grade
+	from user
+	where userName = #{userName} and userid = #{userId} and userAddress = #{userAddress}
+	</select>
+</mapper>

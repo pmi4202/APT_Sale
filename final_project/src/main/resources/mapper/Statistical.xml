@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ssafy.final_project.model.mapper.StatisticalMapper">
+
+	<select id="selectAptLikeTop10" resultType="LikeRankingDto"
+		parameterType="map">
+		select
+		ranking,aptCode,aptName,dongCode,dongName,like_count as
+		likeCount
+		from
+		houseinfo h
+		left outer join (select rank() over(order by
+		count(*)
+		desc) as
+		ranking,
+		aptCode,count(*) like_count
+		from houseinfolike
+		group by
+		aptCode
+		having like_count &gt; 0) hlc
+		using (aptCode) where
+		like_count > 0
+		<if test="guguncode != '' ">
+			and dongCode like concat(#{guguncode},'%')
+		</if>
+	</select>
+
+	<select id="selectAptDealAmountTop10"
+		resultType="DealAmountRankingDto" parameterType="map">
+		select ranking, aptCode, aptName, dongCode, dealAmount from
+		( select
+		rank() over(order by dealAmount desc) as
+		ranking,aptCode,
+		aptName,dongCode,dealAmount
+		from houseinfo hi
+		left outer join (select
+		aptCode,max(dealAmount) as dealAmount
+		from housedeal where aptCode is
+		not null
+		group by aptCode) hd
+		using(aptCode)
+		<if test="guguncode != ''">
+			where dongCode like concat(#{guguncode},'%')
+		</if>
+		)t
+		<![CDATA[where ranking <= 10;]]>
+
+	</select>
+
+	<select id="selectDealCount" resultType="DealCountRankingDto">
+		select t1.aptCode,
+		aptName, dongCode, dongName, buildYear, jibun, lat, lng, img, ranking,
+		count from houseinfo
+		join
+		(select rank() over(order by count(*) desc) as ranking,aptCode,count(*) as
+		count from housedeal
+		where aptCode is not null
+		group by aptCode) t1
+		on t1.aptCode = houseinfo.aptCode
+		<![CDATA[
+		where ranking <= 10;
+		]]>
+	</select>
+
+</mapper>
