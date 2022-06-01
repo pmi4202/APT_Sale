@@ -1,0 +1,25 @@
+
+delimiter //
+	CREATE TRIGGER board_delete_casacade_comment
+	BEFORE  DELETE ON BOARD  # 보드가 삭제될 때, 하나가 삭제될 때마다,
+	FOR EACH ROW
+	BEGIN
+		DECLARE boardNo INT; 
+		SET boardNO = OLD.no; # 삭제되는 보드의 no(PK)
+        
+        DELETE FROM comment where board_no = boardNo; # 삭제되는 보드의 no(PK)를 참조하는 comment를 삭제한다.
+	END;//
+delimiter ;
+
+
+delimiter //
+	CREATE TRIGGER user_delete_casacade_board
+	BEFORE  DELETE ON user  # 사용자가 삭제될 때, 
+	FOR EACH ROW
+	BEGIN
+		DECLARE userId CHAR(20); 
+		SET userId = OLD.userid; # 삭제되는 사용자의 userid(PK)
+        
+        DELETE FROM board where board.userid = userId; # 삭제되는 유저가 쓴 글들을 삭제한다.
+	END;//
+delimiter ;
