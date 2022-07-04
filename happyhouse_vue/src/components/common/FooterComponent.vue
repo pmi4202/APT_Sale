@@ -30,9 +30,9 @@
 export default {
   data() {
     return {
-      mail: ["pyr123@ssafy.com", "jdg987@koko.com", "start_so@naver.com"],
+      mail: ["pyr123@naver.com", "jdg987@koko.com", "start_so@naver.com"],
       phone: ["06.00.00.00.00", "123-123-4-12", "123123.12312,12,3"],
-      mention: "2022-05 | ssafy lucky seven team",
+      mention: "2022-05 | lucky seven team",
     };
   },
   computed: {
