@@ -10,7 +10,11 @@
 ## 💻 담당 업무
 - 팀장, 데모 영상 제작
 - UI/UX 디자인
-- [MySQL] 데이터 베이스 설계      
+- [MySQL] 데이터 베이스 설계
+   - <details>
+         <summary>ERD</summary>
+         
+   </details>
 - [Vue.js] 지역 검색 시, 해당 지역 아파트 정보를 리스트로 띄우기
 - [Vue.js] axios로 데이터를 받아와 Map에 마커 표시하기
 - [Vue.js] 사용자가 선택한 마커 이미지 변경 및 리스트에서 포커스 맞춰주기
