@@ -13,7 +13,7 @@
 - [MySQL] 데이터 베이스 설계
    - <details>
          <summary>ERD</summary>
-         
+         <img src = "https://github.com/pmi4202/APT_Sale/blob/master/happyhouse_erd.png?raw=true"/>
    </details>
 - [Vue.js] 지역 검색 시, 해당 지역 아파트 정보를 리스트로 띄우기
 - [Vue.js] axios로 데이터를 받아와 Map에 마커 표시하기
